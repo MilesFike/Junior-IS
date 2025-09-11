@@ -15,22 +15,22 @@
 
 \maketitle
 
-In your proposal, you will provide justification on why your project matters based on work which has been done in this area, using in-line citations
-
 In the past, many different computer visions systems have been created to convert handwritten or printed text of different fonts and styles to computer readable text. These systems all tend to involve similar principles of computer vision to decipher text using systems trained on data sets of images of text. More recently Model Context Protocol (MCP) has been released. As is explained on the Model Context Protocol Website, this technology assists AI systems use of technologies by providing connections between AI systems and tools, workflows, and data sources that they need \cite{modelContextProtocol/getting-started/intro}. I intend to approach issues and limitations of transcription technologies through the implementation of MCP, more specific AI models can be chosen to convert different fonts and handwriting systems to digital text rather than having one large system for all types of text. 
+\newline
+Currently many different computer vision systems are used to interpret handwriting as digital text, but these systems are somewhat constrained.  For example, two researchers Ying Yu and Yuhe Tian at College of Design and Art Shenyang Architecture University created a computer vision system that interpreted handwritten numbers based on a data set of handwritten numbers. They noticed that when faced with “more than one handwritten digits written in succession and handwritten digits with incoherent strokes” the tool was less accurate \cite{10.1145/3727648.3727679}. The limitations of the training led to the AI failing to recognize some characters. To get around issues like these, I could attempt to have a computer vision system based on a data set of densely packed characters accessible to the MCP. Another computer vision system created by Bensalah et al. and for their article, “A User Perspective on HTR Methods for the Automatic Transcription of Rare Scripts: The Case of Codex Runicus” focused on obscure scripts, using alternative methods as “existing methods are often too constrained since they need labelled data for training and fine-tuning.” \cite{10.1145/3519306}  To get around this issue, they focused on alternative few-shot method to detect characters without a dataset. This technique could help me to analyze more obscure handwriting styles with computer vision while more advanced computer vision systems may be implemented for more popular writing styles. It is important to note that many datasets and handwriting recognition systems exist across the internet. My system will involve aspects of several different systems using the Model Context Protocol to decide between them for specific cases.
 \newpage
 \section*{Appendix}
 A concise list of features / user stories in the order in which they will be built. A few examples are below to demonstrate the expected scope and level of granularity; you will have more features than this.
 \begin{itemize}
-	\item Computer vision systems return digital text from images of handwritten text.
+	\item Computer vision systems return digital text from images of handwritten text, at least 3.
 	\item User can view the extracted text.
+	\item A text input allows the user to select the style of the text.
 	\item MCP determines the best model for text extraction based on the image provided.
 	\item User can select a specific model for text extraction.
 	\item System provides feedback on the accuracy of the text extraction.
 	\item Drop box to upload an image for text extraction.
 	\item A button downloads the text into a text file.
 	\item A text box displays the tool used to read the text to clarify to the user what model was used.
-
 \end{itemize}
 
 
