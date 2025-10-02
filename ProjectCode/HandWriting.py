@@ -159,9 +159,11 @@ if __name__ == "__main__":
     with torch.no_grad():
         for data in testloader:
             images, labels = data
+            labels = labels - 1
             outputs = net(images)
             _, predicted = torch.max(outputs, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
         percent = correct/total
         print(f'Accuracy of the network on test images: {percent:.2f}%')
+
