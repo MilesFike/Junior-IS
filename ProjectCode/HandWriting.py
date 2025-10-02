@@ -6,6 +6,9 @@ from emnist import list_datasets
 from PIL import Image
 import torch.optim as optim
 from visionClass import net
+import torchvision.transforms.functional as Tform
+import matplotlib.pyplot as plt
+
 
 #What EMNIST DATA LOOKS LIKE according to https://www.tensorflow.org/datasets/catalog/emnist:
 #FeaturesDict({
@@ -166,4 +169,24 @@ if __name__ == "__main__":
             correct += (predicted == labels).sum().item()
         percent = correct/total
         print(f'Accuracy of the network on test images: {percent:.2f}%')
+
+    images, labels = next(iter(testloader))
+    image = images[1]
+    label = labels[1] 
+
+    imageInput = image.unsqueeze(0) #This just adds that extra 1 in the list to make it a batch of 1   
+
+    with torch.no_grad():
+        outputs = net(imageInput)
+        _, predicted = torch.max(outputs, 1)
+
+    real = chr(label+96)
+    predicted_letter = chr(predicted.item() + 97) # 97 because I didn't adjust labels
+    print(real)
+    print(predicted_letter)
+
+    plt.imshow(image.squeeze(), cmap='gray')
+    plt.title("Test Image")
+    plt.axis('off')
+    plt.show()
 
