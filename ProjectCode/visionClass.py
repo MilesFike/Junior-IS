@@ -9,13 +9,13 @@ class Net(nn.Module): #nn.Module is the base for Pytorch models. I am just filli
         self.pool = nn.MaxPool2d(stride=2, kernel_size=2) #10 * 12^2
         self.convolute2 = nn.Conv2d(10, 20, stride=1, kernel_size = 5) #Convolution layers (12-5) + 1 = 8
         self.pool2 = nn.MaxPool2d(stride=2, kernel_size=2) #Pooling layers 20 * 4 ^2
-        self.fullcon1 = nn.Linear(20 *4 *4, 100) #Fully connected layers
-        self.fullcon2 = nn.Linear(100, 50)
-        self.fullcon3 = nn.Linear(50, 10)
+        self.fullcon1 = nn.Linear(20 *4 *4, 104) #Fully connected layers
+        self.fullcon2 = nn.Linear(104, 52)
+        self.fullcon3 = nn.Linear(52, 26)
 
     def forward(self, x):
-        x = self.pool(torch.relu(self.conv1(x)))   # Common activation for nn, turns negatives to 0
-        x = self.pool(torch.relu(self.conv2(x)))   
+        x = self.pool(torch.relu(self.convolute(x)))   # Common activation for nn, turns negatives to 0
+        x = self.pool(torch.relu(self.convolute2(x)))   
         x = x.view(-1, 20 *4*4) # prep for fullcon1
         x = torch.tanh(self.fullcon1(x)) #Tahn limits to between one and negative 1
         x = torch.tanh(self.fullcon2(x))
