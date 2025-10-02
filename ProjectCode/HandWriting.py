@@ -19,6 +19,7 @@ import matplotlib.pyplot as plt
 transform = torchvision.transforms.ToTensor()
 
 if __name__ == "__main__":
+    print("In file")
     shower = input("Show images(y/n):")
     initData = torchvision.datasets.EMNIST(
         root = "./data", #Pytorch downloads the data in the root
@@ -102,91 +103,113 @@ if __name__ == "__main__":
 #)
 
 
-    print("Label testing:")
+    labelTest = input("Label testing(y/n):")
 
-    alphabeta = [chr(i) for i in range(97, 123)]
-    print(alphabeta)
+    if(labelTest == 'y'):
+        alphabeta = [chr(i) for i in range(97, 123)]
+        print(alphabeta)
 
-    numAB = [(ord(i) - 96) for i in alphabeta]
-    print(numAB)
-
-
-    locFirstB = [] #A's are difficult to read
-    for i in range(1000):
-        if labels[i] == numAB[1]:
-            locFirstB.append(i)
-        if len(locFirstB) > 4:
-            break
-
-    for i in locFirstB:
-        im = initData1[i][0]
-        im.show()
-
-    print("Actual Computer Vision System:")
-        
-    criterion = nn.CrossEntropyLoss() #taken fom https://www.geeksforgeeks.org/deep-learning/computer-vision-with-pytorch/
-    optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9) #net from model short for network
+        numAB = [(ord(i) - 96) for i in alphabeta]
+        print(numAB)
 
 
+        locFirstB = [] #A's are difficult to read
+        for i in range(1000):
+            if labels[i] == numAB[1]:
+                locFirstB.append(i)
+            if len(locFirstB) > 4:
+                break
 
-    print("Block entered")
-    for i in range(2): 
-        device = torch.device("cpu")
-        net.to(device)  #makes it run on cpu
-        running_loss = 0
+        for i in locFirstB:
+            im = initData1[i][0]
+            im.show()
 
-        for j, data in enumerate(trainloader, 0):
-            inputs, labels = data
-            labels = labels - 1 #Fixes out of bounds
+    compVision = input("Actual Computer Vision System(y/n):")
+    if(compVision == "y"):
+        criterion = nn.CrossEntropyLoss() #taken fom https://www.geeksforgeeks.org/deep-learning/computer-vision-with-pytorch/
+        optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9) #net from model short for network
 
-            inputs, labels = inputs.to(device), labels.to(device)
+        for i in range(2): 
+            device = torch.device("cpu")
+            net.to(device)  #makes it run on cpu
+            running_loss = 0
+
+            for j, data in enumerate(trainloader, 0):
+                inputs, labels = data
+                labels = labels - 1 #Fixes out of bounds
+
+                inputs, labels = inputs.to(device), labels.to(device)
             
             #print(f"Input batch shape: {inputs.shape}")
             #print(f"Labels batch shape: {labels.shape}")
-            optimizer.zero_grad()
+                optimizer.zero_grad()
             
-            outputs = net(inputs)
-            loss = criterion(outputs, labels)
-            loss.backward()
-            optimizer.step()
-            running_loss += loss.item()
-            if j % 100 == 99:  # print every 100 mini-batches down scaling for efficiency, and because I want to see results.
-                print(f'[{i + 1}, {j + 1}] loss: {running_loss / 100:.3f}')
-                running_loss = 0
+                outputs = net(inputs)
+                loss = criterion(outputs, labels)
+                loss.backward()
+                optimizer.step()
+                running_loss += loss.item()
+                if j % 100 == 99:  # print every 100 mini-batches down scaling for efficiency, and because I want to see results.
+                    print(f'[{i + 1}, {j + 1}] loss: {running_loss / 100:.3f}')
+                    running_loss = 0
 
-    print('This model is trained')
+        print('This model is trained')
 
-#Test primarily derived from https://www.geeksforgeeks.org/deep-learning/computer-vision-with-pytorch/
-    correct = 0
-    total = 0
-    with torch.no_grad():
-        for data in testloader:
-            images, labels = data
-            labels = labels - 1
-            outputs = net(images)
+    #Test primarily derived from https://www.geeksforgeeks.org/deep-learning/computer-vision-with-pytorch/
+        correct = 0
+        total = 0
+        with torch.no_grad():
+            for data in testloader:
+                images, labels = data
+                labels = labels - 1
+                outputs = net(images)
+                _, predicted = torch.max(outputs, 1)
+                total += labels.size(0)
+                correct += (predicted == labels).sum().item()
+            percent = correct/total
+            print(f'Accuracy of the network on test images: {percent:.2f}%')
+
+
+        #My tests for individual letters so I can check if it works
+        testiter = iter(testloader)
+        images, labels = next(testiter)
+        image = images[1]
+        label = labels[1] 
+
+        imageInput = image.unsqueeze(0) #This just adds that extra 1 in the list to make it a batch of 1   
+
+        with torch.no_grad():
+            outputs = net(imageInput)
             _, predicted = torch.max(outputs, 1)
-            total += labels.size(0)
-            correct += (predicted == labels).sum().item()
-        percent = correct/total
-        print(f'Accuracy of the network on test images: {percent:.2f}%')
 
-    images, labels = next(iter(testloader))
-    image = images[1]
-    label = labels[1] 
+        real = chr(label+96)
+        predicted_letter = chr(predicted.item() + 97) # 97 because I didn't adjust labels
+        print(f"Actual Label {real}")
+        print(f"Predicted Label {predicted_letter}")
 
-    imageInput = image.unsqueeze(0) #This just adds that extra 1 in the list to make it a batch of 1   
+        plt.imshow(image.squeeze(), cmap='gray')
+        plt.title("Test Image")
+        plt.axis('off')
+        plt.show()
 
-    with torch.no_grad():
-        outputs = net(imageInput)
-        _, predicted = torch.max(outputs, 1)
 
-    real = chr(label+96)
-    predicted_letter = chr(predicted.item() + 97) # 97 because I didn't adjust labels
-    print(real)
-    print(predicted_letter)
+        image = images[2]
+        label = labels[2] 
 
-    plt.imshow(image.squeeze(), cmap='gray')
-    plt.title("Test Image")
-    plt.axis('off')
-    plt.show()
+        imageInput = image.unsqueeze(0) #This just adds that extra 1 in the list to make it a batch of 1   
 
+        with torch.no_grad():
+            outputs = net(imageInput)
+            _, predicted = torch.max(outputs, 1)
+
+        real = chr(label+96)
+        predicted_letter = chr(predicted.item() + 97) # 97 because I didn't adjust labels
+        print(f"Actual Label {real}")
+        print(f"Predicted Label {predicted_letter}")
+
+        plt.imshow(image.squeeze(), cmap='gray')
+        plt.title("Test Image")
+        plt.axis('off')
+        plt.show()
+
+        
