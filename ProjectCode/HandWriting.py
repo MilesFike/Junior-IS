@@ -1,14 +1,9 @@
 import torch
 import torchvision
 import torch.nn as nn #Provides convolution requirements
-#import tensorflow_datasets #Installation failed
 import torchvision.transforms
-import matplotlib.pyplot
-import emnist
 from emnist import list_datasets
 from PIL import Image
-#import pandas
-#import plt
 import torch.optim as optim
 from visionClass import net
 
@@ -157,3 +152,16 @@ if __name__ == "__main__":
                 running_loss = 0
 
     print('This model is trained')
+
+#Test primarily derived from https://www.geeksforgeeks.org/deep-learning/computer-vision-with-pytorch/
+    correct = 0
+    total = 0
+    with torch.no_grad():
+        for data in testloader:
+            images, labels = data
+            outputs = net(images)
+            _, predicted = torch.max(outputs, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+        percent = correct/total
+        print(f'Accuracy of the network on test images: {percent:.2f}%')
