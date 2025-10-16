@@ -16,17 +16,9 @@
 \text{2 October 2025}
 \end{flushleft} 
 \section{Background}
-\begin{enumerate}
-\item MCP or Model Context Protocol is a protocol used to allow LLMs such as ChatGPT to interact with external tools. This is a 
-relatively new protocol, and therefore, very little peer-reviewed research has been done on its use, risks, and capabilities. 
-\item Computer vision refers to the AI systems that allow computers to interpret visual information.
-\end{enumerate} 
+Within the AI field of computer vision, one popular goal is the transcription of handwritten text. This is called handwriting recognition technology or Handwritten Text Recognition (HTR). According to Yuhe Tian and Ying Yu in their research paper, “Research Application of Computer Vision-Based Convolutional Neural Network in Handwriting Recognition Technology,” a convolutional neural network system was utilized to build a computer vision system able to recognize digits from the MNIST and achieve accuracy of up to 100\% on the number 1 in the test data. Essentially a convolutional neural network uses a combination of a single input layer then convolution layers that create feature maps, pooling layers that decrease data, and fully connected layers to create and process feature maps from images and fully connected layers that link the neurons to output results. These are very effective systems but according to the research article “A User Perspective on HTR Methods for the Automatic Transcription of Rare Scripts: The Case of \emph{Codex Runicus}” by Mohamed Ali Souibgui and others, there are issues with methods like convolutional neural networks, and recurrent neural networks because they require deep learning that involves vast datasets inaccessible to some less common scripts. In their paper, they sought to transcribe the \emph{Codex Runicus} which is in a very uncommon language. To do this, they used learning free methods such as unsupervised clustering which creates clusters which are subdivided, then the labels of each cluster are propagated through the other symbols, and the few-shot classification method which seeks to represent each individual symbol as a node in a graph and compare similarity between each pair of symbols. These methods may all be used to accomplish similar tasks but at different scales. At the moment, it is very possible to perform highly accurate machine learning for popular fonts and styles but the pursuit of handwritten text recognition for any obscure text may result in lower accuracy systems that avoid machine learning methods.
 
-\section{Convolutional Neural Networks For Computer Vision}
-\begin{enumerate}
-\item 
-\item 
-\end{enumerate} 
+There are several different popular datasets for handwritten text recognition computer vision. As was seen in Yuhe Tian and Ying Yu’s paper, they used the MNIST. This is a popular data set used for testing computer vision systems provided by the National Institute of Standards and Technology consisting of 70,000 grayscale images of 28 by 28 pixel digits. Another dataset the EMNIST is described in a research paper “EMNIST: an extension of MNIST to handwritten letters” by Gregory Cohen and others. This new data set includes images of characters from a-z in the same grayscale 28 by 28 pixel format used by the MNIST dataset. Each character in the dataset is labelled with its ASCII value.  This makes many methods Yuhe Tian and Ying Yu described very easily applicable to the wider data set. As was noted by by Mohamed Ali Souibgui in their paper, it is difficult to find labelled data for some obscure texts.
 
 
 \end{document}
