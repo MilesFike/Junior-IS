@@ -34,7 +34,7 @@ To connect AI models with the tools that they require to function optimally and 
 
 
 \section{Methodology}
-
+While seeking to implement the necessary computer vision systems to complete this project, I first explored the computer vision systems frequently used by other researchers in the field. I discovered that among them one of the most popular was the MNIST\cite{10.1145/3727648.3727679}. From there, further research soon revealed the existence of the EMNIST which included the full set of characters that I required for my project. Thus, I used the dataset’s parameters to create a convolutional neural network (CNN), a multi-layer architecture designed for image classification tasks. To perform the machine learning tasks involved, I utilized the Python PyTorch library. The model begins with an input of a single-image, 28 by 28 pixels. From here, kerneling with 10 filters with a 5 by 5 size and stride of 1 are applied in the first convolutional layer. This operation extracts 10 feature maps with emphasized details of the image. From here, a pooling layer halves the dimensions of each feature map reducing them to 12 by 12 squares. Next, another convolutional layer expands the feature map depth to 20 using the same kernel size and stride. From here, a second pooling layer simplifies the feature map to dimensions of 4 by 4 for each map. Finally, three linear fully connected layers map the 320 inputs to 104 neurons, then reduce that to 52, and finally bring that down to 26, fully aligned with the number of potential characters in the dataset.
 \section{Results}
 
 \section{Conclusion}
