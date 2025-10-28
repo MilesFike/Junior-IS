@@ -58,40 +58,40 @@ if __name__ == "__main__":
 
     im = initData1[0][0]
 #print(chr(mapping[labels[0]]))
-    rotated = im.rotate(90)
+    #rotated = im.rotate(90)
     if(shower == "y"):
         im.show()
-        rotated.show()
-    print(f"Label: {labels[0]}, Letter: {chr(labels[0] + 96)}")
+    #    rotated.show()
+        print(f"Label: {labels[0]}, Letter: {chr(labels[0] + 96)}")
 
 
     im = initData1[1][0]
 #print(chr(mapping[labels[0]]))
-    rotated = im.rotate(90)
+    #rotated = im.rotate(90)
     if(shower == "y"):
         im.show()
-        rotated.show()
-    print(f"Label: {labels[1]}, Letter: {chr(labels[1] + 96)}")
+    #    rotated.show()
+        print(f"Label: {labels[1]}, Letter: {chr(labels[1] + 96)}")
 
 
     im = initData1[10000][0]
 #print(chr(mapping[labels[10000]]))
 
-    rotated = im.rotate(90)
+    #rotated = im.rotate(90)
     if(shower == "y"):
         im.show()
-        rotated.show()
-    print(chr(labels[10000]+96))
+    #    rotated.show()
+        print(chr(labels[10000]+96))
 
 
     im = initData1[10001][0]
 #print(labels[10001])
 #print(chr(mapping[labels[10000]]))
-    rotated = im.rotate(90)
+    #rotated = im.rotate(90)
     if(shower == "y"):
         im.show()
-        rotated.show()
-    print(chr(labels[10001]+96))
+        #rotated.show()
+        print(chr(labels[10001]+96))
 
 #print(dataset[0][0][0][0][0][1]) Only two levels in dataset
 
@@ -211,5 +211,22 @@ if __name__ == "__main__":
         plt.title("Test Image")
         plt.axis('off')
         plt.show()
+
+        image_path = "imgs/m2.png"  # your prepared image
+        img = Image.open(image_path)
+
+        img_tensor = torchvision.transforms.functional.to_tensor(img).unsqueeze(0)  # [1, 1, 28, 28] This is because the network needs to receive a tensor format
+
+            # Running my M  through the network
+        device = torch.device("cpu")
+        net.to(device)
+        img_tensor = img_tensor.to(device)
+
+        with torch.no_grad():
+            outputs = net(img_tensor)
+            _, predicted = torch.max(outputs, 1)
+
+        predicted_letter = chr(predicted.item() + 97)  #adjustment for labels because ascii
+        print(f"Predicted letter: {predicted_letter}")
 
         

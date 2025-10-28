@@ -1,11 +1,11 @@
-import torch.nn as nn
+import torch.nn as nn #nn is for neural networks
 import torch
 #The inputs for this model are based on 
 #Data process for training and testing
 class Net(nn.Module): #nn.Module is the base for Pytorch models. I am just filling in the gaps to define convolution layers.
     def __init__(self):
         super(Net, self).__init__() 
-        self.convolute = nn.Conv2d(1, 10, stride=1, kernel_size=5) #1 input channel because it is gray scale. 10 for output. Stride is step size. Kernel is 3rd num (28-5) + 1 = 24, 10 * 24^2
+        self.convolute = nn.Conv2d(1, 10, stride=1, kernel_size=5) #1 input channel because it is gray scale. 10 foroutput. Stride is step size. Kernel is 3rd num (28-5) + 1 = 24, 10 * 24^2
         self.pool = nn.MaxPool2d(stride=2, kernel_size=2) #10 * 12^2
         self.convolute2 = nn.Conv2d(10, 20, stride=1, kernel_size = 5) #Convolution layers (12-5) + 1 = 8
         self.pool2 = nn.MaxPool2d(stride=2, kernel_size=2) #Pooling layers 20 * 4 ^2
