@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 transform = torchvision.transforms.ToTensor()
 
 if __name__ == "__main__":
-    print("In file")
+    #print("In file")
     shower = input("Show images(y/n):")
     initData = torchvision.datasets.EMNIST(
         root = "./data", #Pytorch downloads the data in the root
@@ -50,11 +50,11 @@ if __name__ == "__main__":
     testloader = torch.utils.data.DataLoader(testData, batch_size=32, shuffle=False, num_workers=2)
 
     labels = initData.targets
-    print(initData) #torchvision is storing dataset metadata
-#print(EMNIST) #EMNIST is not printable
-#print(dataset[0]['image'])Tuple not dictionary despite name
-    print(initData1[0][0])
-    print(initData1[0][1])
+    #print(initData) #torchvision is storing dataset metadata
+    #print(EMNIST) #EMNIST is not printable
+    #print(dataset[0]['image'])Tuple not dictionary despite name
+    #print(initData1[0][0])
+    #print(initData1[0][1])
 
     im = initData1[0][0]
 #print(chr(mapping[labels[0]]))
