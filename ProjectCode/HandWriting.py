@@ -212,7 +212,7 @@ if __name__ == "__main__":
         plt.axis('off')
         plt.show()
 
-        image_path = "imgs/m2.png"  # your prepared image
+        image_path = "letters/letter0.png"  # your prepared image
         img = Image.open(image_path)
 
         img_tensor = torchvision.transforms.functional.to_tensor(img).unsqueeze(0)  # [1, 1, 28, 28] This is because the network needs to receive a tensor format

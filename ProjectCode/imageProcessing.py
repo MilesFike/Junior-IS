@@ -6,10 +6,12 @@ import time
 def run(imPathM):
     m2 = cv2.imread(imPathM)
     #converts to gray scale
-    gray = cv2.cvtColor(m2, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(m2, cv2.COLOR_BGR2GRAY)\
+    #This extra Gaussian Blur reduces the background noise
+    gray = cv2.GaussianBlur(gray, (5, 5), 0)
 
     #Pixels above threshold become white. These are then replaced with black
-    _, mask = cv2.threshold(gray, 200, 255, cv2.THRESH_BINARY_INV)
+    _, mask = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY_INV)
     black_background = numpy.zeros_like(m2)
 
     result = cv2.bitwise_and(m2, m2, mask=mask) + black_background
@@ -47,7 +49,25 @@ def run(imPathM):
     pixels = m3.load()#Somehow gives attribute size
 
     width, height, = m3.size
-    #m3.show()
+    m3.show() #This is the last show where it works
+
+    
+    img = cv2.imread("imgs\m2.png")
+
+    #2 pixel padding
+    padded = cv2.copyMakeBorder(
+        img,
+    top=2, bottom=2, left=2, right=2,
+    borderType=cv2.BORDER_CONSTANT,
+    value=(0, 0, 0) ) # black color)
+
+
+    cv2.imwrite("imgs\m2.png", padded)
+    m3 = Image.open("imgs\m2.png")
+    pixels = m3.load()#Somehow gives attribute size
+
+    width, height, = m3.size
+    #m3.show() #This is the last show where it works
     initWhite = [0,0]
 
     for x in range(width):
@@ -64,7 +84,7 @@ def run(imPathM):
     m3.save("imgs\m2.png")
     #print(initWhite)
     m2 = cv2.imread("imgs\m2.png")
-    cropped_image = m2[0:height, (initWhite[0])-1:height]
+    cropped_image = m2[0:height, (initWhite[0])-1:width]
     #print(width)
     #print(height)
     cv2.imwrite("imgs\m2.png", cropped_image)
@@ -96,7 +116,7 @@ def run(imPathM):
     cv2.imwrite("imgs\m2.png", cropped_image)
     m3 = Image.open("imgs\m2.png")
     pixels = m3.load()#Somehow gives attribute size
-
+    #m3.show()
     width, height, = m3.size
     #m3.show()
     initWhite = [0,0]
@@ -188,6 +208,7 @@ def run(imPathM):
     m3 = Image.open("imgs\m2.png")
     m3 = m3.transpose(Image.FLIP_LEFT_RIGHT)
     m3.save("imgs\m2.png")
+    #m3.show()
 
     m3 = Image.open("imgs\m2.png")
     m3 = m3.rotate(90)
@@ -202,5 +223,6 @@ def run(imPathM):
 if __name__ == "__main__":
 
     imPathM = "imgs\m.jpg"
+    imPathM = "letters\letter0.png"
     run(imPathM)
 
