@@ -3,10 +3,10 @@ from PIL import ImageOps#Helps create original black but textured background wit
 import cv2 #cv2 used for more background conversions
 import numpy 
 import time
-def run(imPathM):
+def process(imPathM):
     m2 = cv2.imread(imPathM)
     #converts to gray scale
-    gray = cv2.cvtColor(m2, cv2.COLOR_BGR2GRAY)\
+    gray = cv2.cvtColor(m2, cv2.COLOR_BGR2GRAY)
     #This extra Gaussian Blur reduces the background noise
     gray = cv2.GaussianBlur(gray, (5, 5), 0)
 
@@ -145,7 +145,7 @@ def run(imPathM):
     pixels = m3.load()#Somehow gives attribute size
 
     width, height, = m3.size
-    #m3.show()
+    m3.show()
     initWhite = [0, 0]
     for y in range(height - 1, -1, -1):
         for x in range(width - 1, -1, -1):
@@ -165,44 +165,57 @@ def run(imPathM):
     #+1 adds so gap between this and bottom.
     cropped_image = m2[0:initWhite[1]+2, 0:width]
     cv2.imwrite("imgs\m2.png", cropped_image)
-
-    
+    m2 = cv2.imread("imgs\m2.png")
+    gray = cv2.cvtColor(m2, cv2.COLOR_BGR2GRAY)
+    _, thresh = cv2.threshold(gray, 1, 255, cv2.THRESH_BINARY)
+    x, y, w, h = cv2.boundingRect(thresh)
+    cropped = m2[y:y+h, x:x+w]
+    cv2.imwrite("imgs\m2.png", cropped)
+    m3.show()
     m3 = Image.open("imgs\m2.png")
     pixels = m3.load() #gives attribute's size
 
     width, height, = m3.size
     print(width)
     print(height)
-    if(width != height):
-        if height < width:
-            while (height != width):
-                #longer = Image.new("RGB", (width, height + 1), (68, 214, 44))  #neon green row
-                longer = Image.new("RGB", (width, height + 1), (0, 0, 0))  #black row
-                longer.paste(m3, (0, 0))
-                m3 = longer
-                height = height + 1
-        if width < height:
-            while (height != width):
-                #wider = Image.new("RGB", (width + 1, height), (68, 214, 44))  #neon green column
-                wider = Image.new("RGB", (width + 1, height), (0, 0, 0))  #black column
+    #if(width != height):
+    #    if height < width:
+    #        while (height != width):
+    #            #longer = Image.new("RGB", (width, height + 1), (68, 214, 44))  #neon green row
+    #            longer = Image.new("RGB", (width, height + 1), (0, 0, 0))  #black row
+    #            longer.paste(m3, (0, 0))
+    #            m3 = longer
+    #            height = height + 1
+    #    if width < height:
+    #        while (height != width):
+    #            #wider = Image.new("RGB", (width + 1, height), (68, 214, 44))  #neon green column
+    #            wider = Image.new("RGB", (width + 1, height), (0, 0, 0))  #black column
+    #
+    #            wider.paste(m3, (0, 0)) 
+    #            m3 = wider
+    #            width = width + 1
 
-                wider.paste(m3, (0, 0)) 
-                m3 = wider
-                width = width + 1
-    m3.save("imgs\m2.png")
 
-    pixels = m3.load() #gives attribute's size
+    #m3.save("imgs\m2.png")
+
+    #pixels = m3.load() #gives attribute's size
+
+    #width, height, = m3.size
+    #print(width)
+    #print(height)
+    #m3 = Image.open("imgs\m2.png")
+    #m3 = m3.resize((28,28),Image.BICUBIC)#Reduces image size to zero considers surrounding 4 pixels to determine new image values.
+    #m3.save("imgs\m2.png")
+
+    m3 = Image.open("imgs/m2.png")
+    m3 = m3.convert("L")
+    m3 = ImageOps.pad(m3, (max(m3.size), max(m3.size)), color=0, centering=(0.5, 0.5))
+    m3 = m3.resize((28, 28), Image.BICUBIC)
 
     width, height, = m3.size
     print(width)
     print(height)
-    m3 = Image.open("imgs\m2.png")
-    m3 = m3.resize((28,28),Image.BICUBIC)#Reduces image size to zero considers surrounding 4 pixels to determine new image values.
-    m3.save("imgs\m2.png")
-
-    width, height, = m3.size
-    print(width)
-    print(height)
+    m3.save("imgs/m2.png")
 
 
     m3 = Image.open("imgs\m2.png")
@@ -222,7 +235,7 @@ def run(imPathM):
 
 if __name__ == "__main__":
 
-    imPathM = "imgs\m.jpg"
-    imPathM = "letters\letter0.png"
-    run(imPathM)
+    #imPathM = "imgs\m.jpg"
+    imPathM = "letters\letter4.png"
+    process(imPathM)
 

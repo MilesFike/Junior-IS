@@ -8,6 +8,8 @@ import torch.optim as optim
 from visionClass import net
 import torchvision.transforms.functional as Tform
 import matplotlib.pyplot as plt
+from lineToLetter import run, segment_letters
+from imageProcessing import process
 
 
 #What EMNIST DATA LOOKS LIKE according to https://www.tensorflow.org/datasets/catalog/emnist:
@@ -212,21 +214,25 @@ if __name__ == "__main__":
         plt.axis('off')
         plt.show()
 
-        image_path = "letters/letter0.png"  # your prepared image
-        img = Image.open(image_path)
-
-        img_tensor = torchvision.transforms.functional.to_tensor(img).unsqueeze(0)  # [1, 1, 28, 28] This is because the network needs to receive a tensor format
+        run("imgs\milesFike.png")
+        i =     segment_letters("imgs\milesFike.png","imgs\m2.png", output_dir="letters")
+        for j in range(i):
+            process(f"letters/letter{j}.png")
+            image_path = "imgs/m2.png"  # your prepared image
+            img = Image.open(image_path)
+            img.show()
+            img_tensor = torchvision.transforms.functional.to_tensor(img).unsqueeze(0)  # [1, 1, 28, 28] This is because the network needs to receive a tensor format
 
             # Running my M  through the network
-        device = torch.device("cpu")
-        net.to(device)
-        img_tensor = img_tensor.to(device)
+            device = torch.device("cpu")
+            net.to(device)
+            img_tensor = img_tensor.to(device)
 
-        with torch.no_grad():
-            outputs = net(img_tensor)
-            _, predicted = torch.max(outputs, 1)
+            with torch.no_grad():
+                outputs = net(img_tensor)
+                _, predicted = torch.max(outputs, 1)
 
-        predicted_letter = chr(predicted.item() + 97)  #adjustment for labels because ascii
-        print(f"Predicted letter: {predicted_letter}")
+            predicted_letter = chr(predicted.item() + 97)  #adjustment for labels because ascii
+            print(f"Predicted letter: {predicted_letter}")
 
         
