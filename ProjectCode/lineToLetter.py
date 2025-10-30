@@ -85,9 +85,9 @@ def segment_letters(orimg, img, output_dir):
 
     return i
 
-def makeLetters(imPath):
-    img = cv2.imread('/directorypath/image.bmp')
-    num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(img, connectivity=8)
+#def makeLetters(imPath):
+#    img = cv2.imread('/directorypath/image.bmp')
+#    num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(img, connectivity=8)
 
 if __name__ == "__main__":
 

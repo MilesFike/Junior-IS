@@ -41,8 +41,8 @@ def process(imPathM):
     pixels = m3.load() #gives attribute's size
 
     width, height, = m3.size
-    print(width)
-    print(height)
+    #print(width)
+    #print(height)
     if(width != height):
         if height < width:
             while (height != width):
@@ -65,7 +65,7 @@ def process(imPathM):
     
 
     img = Image.open("imgs/m2.png")
-    img.show()
+    #img.show()
     img.save("imgs/m2.png")
     #Transfering back to cv2 for Gaussian Blur
     m2 = cv2.imread("imgs/m2.png")
@@ -204,8 +204,8 @@ def process(imPathM):
     pixels = m3.load() #gives attribute's size
 
     width, height, = m3.size
-    print(width)
-    print(height)
+    #print(width)
+    #print(height)
     #if(width != height):
     #    if height < width:
     #        while (height != width):
@@ -241,8 +241,8 @@ def process(imPathM):
     m3 = m3.resize((28, 28), Image.BICUBIC)
 
     width, height, = m3.size
-    print(width)
-    print(height)
+    #print(width)
+    #print(height)
     m3.save("imgs/m2.png")
 
 
