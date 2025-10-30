@@ -155,7 +155,7 @@ if __name__ == "__main__":
                     print(f'[{i + 1}, {j + 1}] loss: {running_loss / 100:.3f}')
                     running_loss = 0
 
-        print('This model is trained')
+        print('This model is trained images will be tested on now. This should be mostly effective.')
 
     #Test primarily derived from https://www.geeksforgeeks.org/deep-learning/computer-vision-with-pytorch/
         correct = 0
@@ -169,7 +169,7 @@ if __name__ == "__main__":
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
             percent = correct/total
-            print(f'Accuracy of the network on test images: {percent:.2f}%')
+            print(f'Accuracy of the network on its test images: {percent:.2f}%')
 
 
         #My tests for individual letters so I can check if it works
@@ -214,8 +214,8 @@ if __name__ == "__main__":
         plt.axis('off')
         plt.show()
 
-        run("imgs\milesFike.png")
-        i =     segment_letters("imgs\milesFike.png","imgs\m2.png", output_dir="letters")
+        run("imgs/milesFike.png")
+        i =     segment_letters("imgs/milesFike.png","imgs/m2.png", output_dir="letters")
         for j in range(i):
             process(f"letters/letter{j}.png")
             image_path = "imgs/m2.png"  # your prepared image
