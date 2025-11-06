@@ -1,4 +1,5 @@
-For model 2:
+For Model 2:
+
 This model is trained images will be tested on now. This should be mostly effective.
 Accuracy of the network on its test images: 0.89%
 Actual Label a
