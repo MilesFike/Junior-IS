@@ -2,9 +2,18 @@ from PIL import Image
 from PIL import ImageOps#Helps create original black but textured background with color import
 import cv2 #cv2 used for more background conversions
 import numpy 
+import os
 import time
 def process(imPathM):
     m2 = cv2.imread(imPathM)
+    #Checks to see if m2 exists
+    if m2 is None:
+        cwd = os.getcwd()
+        raise FileNotFoundError(f"Could not read image at {imPathM!r}.\nCheck the path and file permissions. cwd: {cwd}")
+    try:
+        os.makedirs("imgs", exist_ok=True)
+    except OSError:
+        pass
     #converts to gray scale
     gray = cv2.cvtColor(m2, cv2.COLOR_BGR2GRAY)
     #This extra Gaussian Blur reduces the background noise
