@@ -6,15 +6,6 @@ import time
 import os #to store the images
 def run(imPathM):
     m2 = cv2.imread(imPathM)
-    # helpful check: cv2.imread returns None when the file can't be read
-    if m2 is None:
-        cwd = os.getcwd()
-        raise FileNotFoundError(f"Could not read image at {imPathM!r}. Check the path and file permissions. cwd: {cwd}")
-    # ensure output folder exists so subsequent writes don't fail silently
-    try:
-        os.makedirs("imgs", exist_ok=True)
-    except OSError:
-        pass
     #converts to gray scale
     gray = cv2.cvtColor(m2, cv2.COLOR_BGR2GRAY)
 
@@ -44,8 +35,7 @@ def run(imPathM):
     return cv2.imread("imgs/m2.png", cv2.IMREAD_GRAYSCALE)
     #num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(mask, connectivity=8)
 def segment_letters(orimg, img, output_dir):
-    # create the provided output_dir (not a hard-coded folder)
-    os.makedirs(output_dir, exist_ok=True)
+    os.makedirs("letters", exist_ok=True)
 
     img1 = Image.open(img)
     #collecting data for iteration
