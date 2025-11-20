@@ -35,6 +35,7 @@ Predicted letter: i
 Predicted letter: k
 Predicted letter: e
 
+[2, 3900] loss: 0.518
 This model is trained images will be tested on now. This should be mostly effective.
 Accuracy of the network on its test images: 0.85%
 Actual Label a
@@ -51,3 +52,22 @@ Predicted letter: f
 Predicted letter: i
 Predicted letter: k
 Predicted letter: e
+
+[2, 3900] loss: 0.491
+This model is trained images will be tested on now. This should be mostly effective.
+Accuracy of the network on its test images: 0.84%
+Actual Label a
+Predicted Label a
+Actual Label a
+Predicted Label a
+[[178, 366], [398, 462], [484, 551], [574, 670], [676, 752], [901, 1033], [1051, 1080], [1100, 1241], [1269, 1340]]
+Predicted letter: a
+Predicted letter: i
+Predicted letter: l
+Predicted letter: r
+Predicted letter: s
+Predicted letter: f
+Predicted letter: i
+Predicted letter: k
+Predicted letter: e
+PS C:\Users\Glast\Desktop\Junior-IS\Junior-IS> 

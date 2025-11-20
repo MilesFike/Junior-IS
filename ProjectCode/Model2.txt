@@ -50,3 +50,4 @@ Predicted letter: f
 Predicted letter: i
 Predicted letter: h
 Predicted letter: e
+

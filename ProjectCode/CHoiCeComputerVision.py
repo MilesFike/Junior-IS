@@ -8,10 +8,10 @@ import torch
 import torchvision
 import torch.nn as nn #Provides convolution requirements
 import torchvision.transforms
-from emnist import list_datasets
 from PIL import Image
 import torch.optim as optim
 from visionClassAllChars import net
+from ChoiceDataset import CHoiCeDataset
 import torchvision.transforms.functional as Tform
 import matplotlib.pyplot as plt
 from lineToLetter import run, segment_letters
@@ -34,79 +34,33 @@ if __name__ == "__main__":
             return label + 65
         else:
             return label + 97
-    #print("In file")
+
+
+
     shower = input("Show images(y/n):")
-    initData = torchvision.datasets.EMNIST(
-        root = "./data", #Pytorch downloads the data in the root
-        split= "byclass", #byclass is all characters. train for MNIST?
-        train = True,
-        download = True,
-        transform=transform #This converts to tensor so batch works in Trainloader
-    )
 
-    initData1 = torchvision.datasets.EMNIST(
-        root = "./data", #Pytorch downloads the data in the root
-        split= "byclass", #byclass is all characters. train for MNIST?
-        train = True,
-        download = True,
-        #No transfer so can look at im data
-    )
+    transform = torchvision.transforms.Compose([
+        torchvision.transforms.Resize((28, 28)),
+        torchvision.transforms.ToTensor()
+    ])
 
-    trainloader = torch.utils.data.DataLoader(initData, batch_size=32, shuffle=True, num_workers=2)
+    dataset = CHoiCeDataset(root_dir="./CHoiCe-Dataset/V0.3", transform=transform)
 
-    testData = torchvision.datasets.EMNIST(
-        root = "./data", #Pytorch downloads the data in the root
-        split= "byclass", #byclass is all characters. train for MNIST?
-        train = False,
-        download = True,
-        transform = transform,
-    )
-#mapping = emnist.read_mapping('emnist-letters-mapping.txt')#This gets the mapping that gives characters meaning.
-    testloader = torch.utils.data.DataLoader(testData, batch_size=32, shuffle=False, num_workers=2)
+# Splitting into train/test parts
+    train_size = int(0.8 * len(dataset))
+    test_size = len(dataset) - train_size
+    train_dataset, test_dataset = torch.utils.data.random_split(dataset, [train_size, test_size])
 
-    labels = initData.targets
-    #print(initData) #torchvision is storing dataset metadata
-    #print(EMNIST) #EMNIST is not printable
-    #print(dataset[0]['image'])Tuple not dictionary despite name
-    #print(initData1[0][0])
-    #print(initData1[0][1])
-
-    im = initData1[0][0]
+    trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=2)
+    testloader = torch.utils.data.DataLoader(test_dataset, batch_size=32, shuffle=False, num_workers=2)
 #print(chr(mapping[labels[0]]))
     #rotated = im.rotate(90)
     if(shower == "y"):
-        im.show()
-    #    rotated.show()
-        print(f"Label: {labels[0]}, Letter: {chr(labelCheck(labels[0]))}")
-
-
-    im = initData1[1][0]
-#print(chr(mapping[labels[0]]))
-    #rotated = im.rotate(90)
-    if(shower == "y"):
-        im.show()
-    #    rotated.show()
-        print(f"Label: {labels[1]}, Letter: {chr(labelCheck(labels[1]))}")
-
-
-    im = initData1[10000][0]
-#print(chr(mapping[labels[10000]]))
-
-    #rotated = im.rotate(90)
-    if(shower == "y"):
-        im.show()
-    #    rotated.show()
-        print(chr(labelCheck(labels[10000])))
-
-
-    im = initData1[10001][0]
+        print("Showing some images from dataset")
 #print(labels[10001])
 #print(chr(mapping[labels[10000]]))
     #rotated = im.rotate(90)
-    if(shower == "y"):
-        im.show()
-        #rotated.show()
-        print(chr(labelCheck(labels[10001])))
+
 
 #print(dataset[0][0][0][0][0][1]) Only two levels in dataset
 
@@ -139,17 +93,6 @@ if __name__ == "__main__":
         print(numAB)
 
 
-        locFirstB = [] #A's are difficult to read
-        for i in range(1000):
-            if labels[i] == numAB[1]:
-                locFirstB.append(i)
-            if len(locFirstB) > 4:
-                break
-
-        for i in locFirstB:
-            im = initData1[i][0]
-            im.show()
-
     compVision = input("Actual Computer Vision System(y/n):")
     if(compVision == "y"):
         criterion = nn.CrossEntropyLoss() #taken fom https://www.geeksforgeeks.org/deep-learning/computer-vision-with-pytorch/
@@ -162,7 +105,6 @@ if __name__ == "__main__":
 
             for j, data in enumerate(trainloader, 0):
                 inputs, labels = data
-                labels = labels - 1 #Fixes out of bounds
 
                 inputs, labels = inputs.to(device), labels.to(device)
             
