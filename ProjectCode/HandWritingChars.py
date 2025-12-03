@@ -121,27 +121,19 @@ if __name__ == "__main__":
     labelTest = input("Label testing(y/n):")
 
     if(labelTest == 'y'):
-        alphabeta = [chr(i) for i in range(48, 58)]
+        alphabeta = [chr(i) for i in range(48, 58)]  # digits
         for i in range(65, 91):
-            alphabeta.append(chr(i))
+            alphabeta.append(chr(i))  #Uppercases
         for i in range(97, 123):
-            alphabeta.append(chr(i))
+            alphabeta.append(chr(i))  #Lowercases
         print(alphabeta)
-
-        numAB = []
-        for i in alphabeta:
-            numAB.append(ord(i)-48)
-        for i in range(65, 91):
-            numAB.append(ord(i)-65)
-        for i in range(97, 123):
-            numAB.append(ord(i)-97)
-        
+        numAB = list(range(62)) # Length of possible characters. This is simple and effective
         print(numAB)
 
 
         locFirstB = [] #A's are difficult to read
         for i in range(1000):
-            if labels[i] == numAB[1]:
+            if labels[i] == numAB[11]:
                 locFirstB.append(i)
             if len(locFirstB) > 4:
                 break
@@ -162,7 +154,7 @@ if __name__ == "__main__":
 
             for j, data in enumerate(trainloader, 0):
                 inputs, labels = data
-                labels = labels - 1 #Fixes out of bounds
+                #Fixes out of bounds
 
                 inputs, labels = inputs.to(device), labels.to(device)
             
@@ -180,14 +172,14 @@ if __name__ == "__main__":
                     running_loss = 0
 
         print('This model is trained images will be tested on now. This should be mostly effective.')
-
+        torch.save(net.state_dict(), 'EMNIST.pth')
+        print('Model saved!')
     #Test primarily derived from https://www.geeksforgeeks.org/deep-learning/computer-vision-with-pytorch/
         correct = 0
         total = 0
         with torch.no_grad():
             for data in testloader:
                 images, labels = data
-                labels = labels - 1
                 outputs = net(images)
                 _, predicted = torch.max(outputs, 1)
                 total += labels.size(0)

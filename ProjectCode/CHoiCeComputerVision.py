@@ -98,7 +98,7 @@ if __name__ == "__main__":
         criterion = nn.CrossEntropyLoss() #taken fom https://www.geeksforgeeks.org/deep-learning/computer-vision-with-pytorch/
         optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9) #net from model short for network
 
-        for i in range(2): 
+        for i in range(3): 
             device = torch.device("cpu")
             net.to(device)  #makes it run on cpu
             running_loss = 0
@@ -122,7 +122,8 @@ if __name__ == "__main__":
                     running_loss = 0
 
         print('This model is trained images will be tested on now. This should be mostly effective.')
-
+        torch.save(net.state_dict(), 'CHOICE.pth')
+        print('Model saved!')
     #Test primarily derived from https://www.geeksforgeeks.org/deep-learning/computer-vision-with-pytorch/
         correct = 0
         total = 0
