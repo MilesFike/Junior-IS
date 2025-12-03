@@ -4,6 +4,13 @@ ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=ce
 #Code above ensures datasets are downloaded correctly
 
 
+from pathlib import Path
+BASE_DIR = Path(__file__).parent
+IMGS_DIR = BASE_DIR / "imgs"
+LETTERS_DIR = BASE_DIR / "letters"
+IMGS_DIR.mkdir(exist_ok=True)
+LETTERS_DIR.mkdir(exist_ok=True)
+
 import torch
 import torchvision
 import torch.nn as nn #Provides convolution requirements
@@ -26,14 +33,17 @@ from imageProcessing import process
 
 transform = torchvision.transforms.ToTensor()
 
+# Quick mode: train on smaller subset for faster testing (set to False for full training)
+QUICK_MODE = False
+
 if __name__ == "__main__":
     def labelCheck(label):
         if(label < 10):
-            return label + 48
+            return label + 48  # 0-9 → 48-57 (ASCII '0'-'9')
         elif(label < 36):
-            return label + 65
+            return (label - 10) + 65  # 10-35 → 65-90 (ASCII 'A'-'Z')
         else:
-            return label + 97
+            return (label - 36) + 97  # 36-61 → 97-122 (ASCII 'a'-'z')
     #print("In file")
     shower = input("Show images(y/n):")
     initData = torchvision.datasets.EMNIST(
@@ -63,6 +73,18 @@ if __name__ == "__main__":
     )
 #mapping = emnist.read_mapping('emnist-letters-mapping.txt')#This gets the mapping that gives characters meaning.
     testloader = torch.utils.data.DataLoader(testData, batch_size=32, shuffle=False, num_workers=2)
+    
+    # Quick mode: use smaller subset for faster iteration
+    if QUICK_MODE:
+        print("QUICK_MODE: Training on subset (1000 batches) instead of full dataset")
+        trainloader = torch.utils.data.DataLoader(
+            torch.utils.data.Subset(initData, list(range(min(32000, len(initData))))),
+            batch_size=32, shuffle=True, num_workers=0
+        )
+        testloader = torch.utils.data.DataLoader(
+            torch.utils.data.Subset(testData, list(range(min(32000, len(testData))))),
+            batch_size=32, shuffle=False, num_workers=0
+        )
 
     labels = initData.targets
     #print(initData) #torchvision is storing dataset metadata
@@ -77,7 +99,7 @@ if __name__ == "__main__":
     if(shower == "y"):
         im.show()
     #    rotated.show()
-        print(f"Label: {labels[0]}, Letter: {chr(labelCheck(labels[0]))}")
+        print(f"Label: {labels[0]}, Letter: {chr(labelCheck(labels[0].item()))}")
 
 
     im = initData1[1][0]
@@ -86,7 +108,7 @@ if __name__ == "__main__":
     if(shower == "y"):
         im.show()
     #    rotated.show()
-        print(f"Label: {labels[1]}, Letter: {chr(labelCheck(labels[1]))}")
+        print(f"Label: {labels[1]}, Letter: {chr(labelCheck(labels[1].item()))}")
 
 
     im = initData1[10000][0]
@@ -96,7 +118,7 @@ if __name__ == "__main__":
     if(shower == "y"):
         im.show()
     #    rotated.show()
-        print(chr(labelCheck(labels[10000])))
+        print(chr(labelCheck(labels[10000].item())))
 
 
     im = initData1[10001][0]
@@ -106,7 +128,7 @@ if __name__ == "__main__":
     if(shower == "y"):
         im.show()
         #rotated.show()
-        print(chr(labelCheck(labels[10001])))
+        print(chr(labelCheck(labels[10001].item())))
 
 #print(dataset[0][0][0][0][0][1]) Only two levels in dataset
 
@@ -145,9 +167,10 @@ if __name__ == "__main__":
     compVision = input("Actual Computer Vision System(y/n):")
     if(compVision == "y"):
         criterion = nn.CrossEntropyLoss() #taken fom https://www.geeksforgeeks.org/deep-learning/computer-vision-with-pytorch/
-        optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9) #net from model short for network
-
-        for i in range(2): 
+        optimizer = optim.SGD(net.parameters(), lr=0.01, momentum=0.9) #net from model short for network
+        
+        print("Starting training...")
+        for i in range(2):
             device = torch.device("cpu")
             net.to(device)  #makes it run on cpu
             running_loss = 0
@@ -172,8 +195,10 @@ if __name__ == "__main__":
                     running_loss = 0
 
         print('This model is trained images will be tested on now. This should be mostly effective.')
-        torch.save(net.state_dict(), 'EMNIST.pth')
-        print('Model saved!')
+        torch.save(net.state_dict(), str(BASE_DIR / 'EMNIST.pth'))
+        print(f"Model saved to {BASE_DIR / 'EMNIST.pth'}")
+        # Load the trained model weights for testing
+        net.load_state_dict(torch.load(str(BASE_DIR / 'EMNIST.pth')))
     #Test primarily derived from https://www.geeksforgeeks.org/deep-learning/computer-vision-with-pytorch/
         correct = 0
         total = 0
@@ -200,7 +225,7 @@ if __name__ == "__main__":
             outputs = net(imageInput)
             _, predicted = torch.max(outputs, 1)
 
-        real = chr(labelCheck(label))
+        real = chr(labelCheck(label.item()))
         predicted_letter = chr(labelCheck(predicted.item())) # 97 because I didn't adjust labels
         print(f"Actual Label {real}")
         print(f"Predicted Label {predicted_letter}")
@@ -220,7 +245,7 @@ if __name__ == "__main__":
             outputs = net(imageInput)
             _, predicted = torch.max(outputs, 1)
 
-        real = chr(labelCheck(label))
+        real = chr(labelCheck(label.item()))
         predicted_letter = chr(labelCheck(predicted.item())) # 97 because I didn't adjust labels
         print(f"Actual Label {real}")
         print(f"Predicted Label {predicted_letter}")
@@ -230,11 +255,11 @@ if __name__ == "__main__":
         plt.axis('off')
         plt.show()
 
-        run("imgs/milesFike.png")
-        i =     segment_letters("imgs/milesFike.png","imgs/m2.png", output_dir="letters")
+        run(str(IMGS_DIR / "milesFike.png"))
+        i =     segment_letters(str(IMGS_DIR / "milesFike.png"),str(IMGS_DIR / "m2.png"), output_dir=str(LETTERS_DIR))
         for j in range(i):
-            process(f"letters/letter{j}.png")
-            image_path = "imgs/m2.png"  # your prepared image
+            process(str(LETTERS_DIR / f"letter{j}.png"))
+            image_path = str(IMGS_DIR / "m2.png")  # processed letter output from imageProcessing.process()
             img = Image.open(image_path)
             img.show()
             img_tensor = torchvision.transforms.functional.to_tensor(img).unsqueeze(0)  # [1, 1, 28, 28] This is because the network needs to receive a tensor format

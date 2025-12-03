@@ -3,6 +3,12 @@ import certifi
 ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=certifi.where())
 #Code above ensures datasets are downloaded correctly
 
+from pathlib import Path
+BASE_DIR = Path(__file__).parent
+IMGS_DIR = BASE_DIR / "imgs"
+LETTERS_DIR = BASE_DIR / "letters"
+IMGS_DIR.mkdir(exist_ok=True)
+LETTERS_DIR.mkdir(exist_ok=True)
 
 import torch
 import torchvision
@@ -151,7 +157,7 @@ if __name__ == "__main__":
             outputs = net(imageInput)
             _, predicted = torch.max(outputs, 1)
 
-        real = chr(labelCheck(label))
+        real = chr(labelCheck(label.item()))
         predicted_letter = chr(labelCheck(predicted.item())) # 97 because I didn't adjust labels
         print(f"Actual Label {real}")
         print(f"Predicted Label {predicted_letter}")
@@ -171,7 +177,7 @@ if __name__ == "__main__":
             outputs = net(imageInput)
             _, predicted = torch.max(outputs, 1)
 
-        real = chr(labelCheck(label))
+        real = chr(labelCheck(label.item()))
         predicted_letter = chr(labelCheck(predicted.item())) # 97 because I didn't adjust labels
         print(f"Actual Label {real}")
         print(f"Predicted Label {predicted_letter}")
@@ -181,11 +187,11 @@ if __name__ == "__main__":
         plt.axis('off')
         plt.show()
 
-        run("imgs/milesFike.png")
-        i =     segment_letters("imgs/milesFike.png","imgs/m2.png", output_dir="letters")
+        run(str(IMGS_DIR / "milesFike.png"))
+        i =     segment_letters(str(IMGS_DIR / "milesFike.png"),str(IMGS_DIR / "m2.png"), output_dir=str(LETTERS_DIR))
         for j in range(i):
-            process(f"letters/letter{j}.png")
-            image_path = "imgs/m2.png"  # your prepared image
+            process(str(LETTERS_DIR / f"letter{j}.png"))
+            image_path = str(IMGS_DIR / "m2.png")  # your prepared image
             img = Image.open(image_path)
             img.show()
             img_tensor = torchvision.transforms.functional.to_tensor(img).unsqueeze(0)  # [1, 1, 28, 28] This is because the network needs to receive a tensor format

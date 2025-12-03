@@ -3,7 +3,12 @@ from PIL import ImageOps#Helps create original black but textured background wit
 import cv2 #cv2 used for more background conversions
 import numpy 
 import os
-import time
+from pathlib import Path
+
+BASE_DIR = Path(__file__).parent
+IMGS_DIR = BASE_DIR / "imgs"
+LETTERS_DIR = BASE_DIR / "letters"
+
 def process(imPathM):
     m2 = cv2.imread(imPathM)
     #Checks to see if m2 exists
@@ -11,7 +16,7 @@ def process(imPathM):
         cwd = os.getcwd()
         raise FileNotFoundError(f"Could not read image at {imPathM!r}.\nCheck the path and file permissions. cwd: {cwd}")
     try:
-        os.makedirs("imgs", exist_ok=True)
+        IMGS_DIR.mkdir(exist_ok=True)
     except OSError:
         pass
     #converts to gray scale
@@ -27,10 +32,10 @@ def process(imPathM):
     #cv2.imshow("m2", m2)
     #checks for all black pixels
 
-    cv2.imwrite("imgs/m2.png", result)
+    cv2.imwrite(str(IMGS_DIR / "m2.png"), result)
 
 
-    img = Image.open("imgs/m2.png")
+    img = Image.open(str(IMGS_DIR / "m2.png"))
     #collecting data for iteration
     pixels = img.load()
     width, height, = img.size
@@ -44,9 +49,9 @@ def process(imPathM):
     #This resize is what is ruining me. FIX THIS SOON MILES FIKE FIX THIS SOON MILES FIKE FIX THIS SOON MILES FIKE FIX THIS SOON MILES FIKE
     #img = img.resize((128, 128))
     width, height, = img.size
-    img.save("imgs/m2.png")
+    img.save(str(IMGS_DIR / "m2.png"))
 
-    m3 = Image.open("imgs/m2.png")
+    m3 = Image.open(str(IMGS_DIR / "m2.png"))
     pixels = m3.load() #gives attribute's size
 
     width, height, = m3.size
@@ -70,37 +75,37 @@ def process(imPathM):
                 width = width + 1
 
     m3 = m3.resize((128,128))
-    m3.save("imgs/m2.png")
+    m3.save(str(IMGS_DIR / "m2.png"))
     
 
-    img = Image.open("imgs/m2.png")
+    img = Image.open(str(IMGS_DIR / "m2.png"))
     #img.show()
-    img.save("imgs/m2.png")
+    img.save(str(IMGS_DIR / "m2.png"))
     #Transfering back to cv2 for Gaussian Blur
-    m2 = cv2.imread("imgs/m2.png")
+    m2 = cv2.imread(str(IMGS_DIR / "m2.png"))
     m2 = cv2.GaussianBlur(m2, (5, 5), 1)
-    cv2.imwrite("imgs/m2.png", m2)
-    m3 = Image.open("imgs/m2.png")
+    cv2.imwrite(str(IMGS_DIR / "m2.png"), m2)
+    m3 = Image.open(str(IMGS_DIR / "m2.png"))
 
     #m3.show
-    #cv2.imwrite("imgs/m3.png", m3)
+    #cv2.imwrite(str(IMGS_DIR / "m3.png"), m3)
 
     listOfEdgePixels = []
-    m3 = Image.open("imgs/m2.png")
+    m3 = Image.open(str(IMGS_DIR / "m2.png"))
     pixels = m3.load()#Somehow gives attribute size
 
     width, height, = m3.size
     #m3.show() #This is the last show where it works
 
     
-    img = cv2.imread("imgs/m2.png")
+    img = cv2.imread(str(IMGS_DIR / "m2.png"))
 
     #2 pixel padding
     padded = cv2.copyMakeBorder( img, top=2, bottom=2, left=2, right=2, borderType=cv2.BORDER_CONSTANT, value=(0, 0, 0) ) #It's black this time
 
 
-    cv2.imwrite("imgs/m2.png", padded)
-    m3 = Image.open("imgs/m2.png")
+    cv2.imwrite(str(IMGS_DIR / "m2.png"), padded)
+    m3 = Image.open(str(IMGS_DIR / "m2.png"))
     pixels = m3.load()#Somehow gives attribute size
 
     width, height, = m3.size
@@ -118,15 +123,15 @@ def process(imPathM):
 
     listOfEdgePixels.append(initWhite)
     #pixels[initWhite[0], initWhite[1]] = (68,214,44)
-    m3.save("imgs/m2.png")
+    m3.save(str(IMGS_DIR / "m2.png"))
     #print(initWhite)
-    m2 = cv2.imread("imgs/m2.png")
+    m2 = cv2.imread(str(IMGS_DIR / "m2.png"))
     cropped_image = m2[0:height, (initWhite[0])-1:width]
     #print(width)
     #print(height)
-    cv2.imwrite("imgs/m2.png", cropped_image)
+    cv2.imwrite(str(IMGS_DIR / "m2.png"), cropped_image)
 
-    m3 = Image.open("imgs/m2.png")
+    m3 = Image.open(str(IMGS_DIR / "m2.png"))
     pixels = m3.load()#Somehow gives attribute size
 
     width, height, = m3.size
@@ -144,14 +149,14 @@ def process(imPathM):
 
     listOfEdgePixels.append(initWhite)
     #pixels[initWhite[0], initWhite[1]] = (68,214,44)
-    m3.save("imgs/m2.png")
+    m3.save(str(IMGS_DIR / "m2.png"))
     #print(initWhite)
-    m2 = cv2.imread("imgs/m2.png")
+    m2 = cv2.imread(str(IMGS_DIR / "m2.png"))
     cropped_image = m2[initWhite[1]-1:height, 0:width]
     #print(width)
     #print(height)
-    cv2.imwrite("imgs/m2.png", cropped_image)
-    m3 = Image.open("imgs/m2.png")
+    cv2.imwrite(str(IMGS_DIR / "m2.png"), cropped_image)
+    m3 = Image.open(str(IMGS_DIR / "m2.png"))
     pixels = m3.load()#Somehow gives attribute size
     #m3.show()
     width, height, = m3.size
@@ -169,16 +174,16 @@ def process(imPathM):
 
     listOfEdgePixels.append(initWhite)
     #pixels[initWhite[0], initWhite[1]] = (68,214,44)
-    m3.save("imgs/m2.png")
+    m3.save(str(IMGS_DIR / "m2.png"))
     #print(initWhite)
-    m2 = cv2.imread("imgs/m2.png")
+    m2 = cv2.imread(str(IMGS_DIR / "m2.png"))
     cropped_image = m2[0:height, 0:initWhite[0] + 2]
     #print(width)
     #print(height)
-    cv2.imwrite("imgs/m2.png", cropped_image)
+    cv2.imwrite(str(IMGS_DIR / "m2.png"), cropped_image)
 
 
-    m3 = Image.open("imgs/m2.png")
+    m3 = Image.open(str(IMGS_DIR / "m2.png"))
     pixels = m3.load()#Somehow gives attribute size
 
     width, height, = m3.size
@@ -195,21 +200,21 @@ def process(imPathM):
 
     listOfEdgePixels.append(initWhite)
     #pixels[initWhite[0], initWhite[1]] = (68, 214, 44)
-    m3.save("imgs/m2.png")
+    m3.save(str(IMGS_DIR / "m2.png"))
     #print("Bottom edge pixel:", initWhite)
 
-    m2 = cv2.imread("imgs/m2.png")
+    m2 = cv2.imread(str(IMGS_DIR / "m2.png"))
     #+1 adds so gap between this and bottom.
     cropped_image = m2[0:initWhite[1]+2, 0:width]
-    cv2.imwrite("imgs/m2.png", cropped_image)
-    m2 = cv2.imread("imgs/m2.png")
+    cv2.imwrite(str(IMGS_DIR / "m2.png"), cropped_image)
+    m2 = cv2.imread(str(IMGS_DIR / "m2.png"))
     gray = cv2.cvtColor(m2, cv2.COLOR_BGR2GRAY)
     _, thresh = cv2.threshold(gray, 1, 255, cv2.THRESH_BINARY)
     x, y, w, h = cv2.boundingRect(thresh)
     cropped = m2[y:y+h, x:x+w]
-    cv2.imwrite("imgs/m2.png", cropped)
+    cv2.imwrite(str(IMGS_DIR / "m2.png"), cropped)
     #m3.show()
-    m3 = Image.open("imgs/m2.png")
+    m3 = Image.open(str(IMGS_DIR / "m2.png"))
     pixels = m3.load() #gives attribute's size
 
     width, height, = m3.size
@@ -233,18 +238,18 @@ def process(imPathM):
     #            width = width + 1
 
 
-    #m3.save("imgs/m2.png")
+    #m3.save(str(IMGS_DIR / "m2.png"))
 
     #pixels = m3.load() #gives attribute's size
 
     #width, height, = m3.size
     #print(width)
     #print(height)
-    #m3 = Image.open("imgs/m2.png")
+    #m3 = Image.open(str(IMGS_DIR / "m2.png"))
     #m3 = m3.resize((28,28),Image.BICUBIC)#Reduces image size to zero considers surrounding 4 pixels to determine new image values.
-    #m3.save("imgs/m2.png")
+    #m3.save(str(IMGS_DIR / "m2.png"))
 
-    m3 = Image.open("imgs/m2.png")
+    m3 = Image.open(str(IMGS_DIR / "m2.png"))
     m3 = m3.convert("L")
     m3 = ImageOps.pad(m3, (max(m3.size), max(m3.size)), color=0, centering=(0.5, 0.5))
     m3 = m3.resize((28, 28), Image.BICUBIC)
@@ -252,27 +257,27 @@ def process(imPathM):
     width, height, = m3.size
     #print(width)
     #print(height)
-    m3.save("imgs/m2.png")
+    m3.save(str(IMGS_DIR / "m2.png"))
 
 
-    m3 = Image.open("imgs/m2.png")
+    m3 = Image.open(str(IMGS_DIR / "m2.png"))
     m3 = m3.transpose(Image.FLIP_LEFT_RIGHT)
-    m3.save("imgs/m2.png")
+    m3.save(str(IMGS_DIR / "m2.png"))
     #m3.show()
 
-    m3 = Image.open("imgs/m2.png")
+    m3 = Image.open(str(IMGS_DIR / "m2.png"))
     m3 = m3.rotate(90)
-    m3.save("imgs/m2.png")
+    m3.save(str(IMGS_DIR / "m2.png"))
 
-    #m2 = cv2.imread("imgs/m2.png")
+    #m2 = cv2.imread(str(IMGS_DIR / "m2.png"))
     #m2 = cv2.GaussianBlur(m2, (5, 5), 1)
-    #cv2.imwrite("imgs/m2.png", m2)
-    img = Image.open("imgs/m2.png").convert('L')  # L makes gray scale only 2 nums not 3 like RGB
-    img.save("imgs/m2.png")
+    #cv2.imwrite(str(IMGS_DIR / "m2.png"), m2)
+    img = Image.open(str(IMGS_DIR / "m2.png")).convert('L')  # L makes gray scale only 2 nums not 3 like RGB
+    img.save(str(IMGS_DIR / "m2.png"))
 
 if __name__ == "__main__":
 
-    #imPathM = "imgs/m.jpg"
-    imPathM = "letters/letter4.png"
+    #imPathM = str(IMGS_DIR / "m.jpg")
+    imPathM = str(LETTERS_DIR / "letter4.png")
     process(imPathM)
 
