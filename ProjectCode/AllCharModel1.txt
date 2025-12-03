@@ -15,3 +15,20 @@ Predicted letter: F
 Predicted letter: i
 Predicted letter: k
 Predicted letter: e
+
+Model saved to c:\Users\Glast\Desktop\Junior-IS\Junior-IS\ProjectCode\EMNIST.pth
+Accuracy of the network on its test images: 0.86%
+Actual Label a
+Predicted Label a
+Actual Label 0
+Predicted Label 0
+[[178, 366], [398, 462], [484, 551], [574, 670], [676, 752], [901, 1033], [1051, 1080], [1100, 1241], [1269, 1340]]
+Predicted letter: M
+Predicted letter: i
+Predicted letter: l
+Predicted letter: e
+Predicted letter: S
+Predicted letter: F
+Predicted letter: i
+Predicted letter: k
+Predicted letter: e
