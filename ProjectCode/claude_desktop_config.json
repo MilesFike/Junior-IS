@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "handwriting-ocr": {
+      "command": "python",
+      "args": ["C:/Users/Glast/Desktop/Junior-IS/Junior-IS/ProjectCode/MCPServer.py"]
+    }
+  }
+}
