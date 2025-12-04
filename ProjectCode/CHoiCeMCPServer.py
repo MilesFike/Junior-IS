@@ -425,6 +425,49 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
                 text=f"Error processing image: {str(e)}"
             )]
 
+    elif name == "recognize_cursive_line":
+        image_path = arguments.get("image_path")
+
+        if not image_path:
+            return [TextContent(
+                type="text",
+                text="Error: image_path parameter is required"
+            )]
+
+        if not os.path.exists(image_path) and not (image_path.startswith('http://') or image_path.startswith('https://')):
+            return [TextContent(
+                type="text",
+                text=(
+                    f"Error: Cannot access file at {image_path!r}\n\n"
+                    "This typically happens when the file is in a different environment.\n"
+                    "Solutions:\n"
+                    "1. Use a local file path that the server can access\n"
+                    "2. Upload the image to a web server and provide the HTTP/HTTPS URL"
+                )
+            )]
+
+        try:
+            result = recognize_cursive_line(image_path)
+
+            response = (
+                f"Recognized Text: {result['text']}\n"
+                f"Number of Characters: {result['num_characters']}\n\n"
+                f"Character Details:\n"
+            )
+
+            for char_info in result['characters']:
+                response += f"  Position {char_info['position']}: '{char_info['character']}' (Confidence: {char_info['confidence']}%)\n"
+
+            response += "\nNote: This model was trained on the CHoiCe dataset and specializes in cursive handwriting (letters only, no digits)."
+
+            return [TextContent(type="text", text=response)]
+
+        except Exception as e:
+            return [TextContent(
+                type="text",
+                text=f"Error processing image: {str(e)}"
+            )]
+
     return [TextContent(
         type="text",
         text=f"Unknown tool: {name}"
