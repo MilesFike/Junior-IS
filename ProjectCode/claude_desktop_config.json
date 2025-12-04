@@ -2,7 +2,15 @@
   "mcpServers": {
     "handwriting-ocr": {
       "command": "python",
-      "args": ["C:/Users/Glast/Desktop/Junior-IS/Junior-IS/ProjectCode/MCPServer.py"]
+      "args": [
+        "C:\\Users\\Glast\\Desktop\\Junior-IS\\Junior-IS\\ProjectCode\\EMNISTMCPServer.py",
+        "C:\\Users\\Glast\\Desktop"]
+    },
+    "cursive-ocr": {
+      "command": "python",
+      "args": [
+        "C:\\Users\\Glast\\Desktop\\Junior-IS\\Junior-IS\\ProjectCode\\CHoiCeMCPServer.py",
+        "C:\\Users\\Glast\\Desktop"]
     }
   }
 }
