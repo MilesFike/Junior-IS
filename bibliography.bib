@@ -21,6 +21,25 @@
   annote    = {This paper analyzes how handwriting recognition technology based on convolution neural networks work. A convolution neural network is generally used for processing grid data and is a feed forward neural network. A convolutional neural network has an input layer that takes in data like 2D images, a convolution layer, which applies kernels to an image, which extract specific features to produce an output feature map, the pooling layer which is used to compress the data and prevent overfitting by taking the averages or maximums of regions, and next, the fully connected layer is used in the last layers of the network and perform tasks like classification on each feature, and finally, the output layer returns results. Handwriting recognition technology is used to convert handwriting into a computer-processable form. This handwriting recognition technology is more widely implemented now because of AI's development and used for diverse purposes including the preservation and retrieval of ancient books. The MNIST is a data set containing handwritten digits. Pytorch was used to build a handwriting recognition model with the MNIST as its training set. The resulting model was vastly successful, but had trouble with multiple digits in succession or with incoherent strokes. The authors of this source, Ying Yu and Yuhe Tian are both associated with the College of Design and Art Shenyang Architecture University, and Yuhe Tian has researched AI in the past, but it is difficult to determine the extent of their background in AI. The sources that the authors use were written by research scholars and faculty at other universities. Overall, the source seems reputable, but the authors are not easily researchable. This source's overview of computer vision implemented in the context of handwriting provided strong background information for any potential investigation computer vision's implementation in identifying historic ligatures which could prove challenging because the authors implied that the computer vision struggled with numbers in succession and this certainly would apply to letters as well. }
 }
 
+@misc{ClaudeOpus4_5,
+  author = {{Anthropic}},
+  title = {Claude Opus 4.5},
+  year = {2025},
+  version = {Opus 4.5},
+  howpublished = {Claude AI},
+  note = {Accessed: 2025-12-04},
+  url = {https://claude.ai},
+  annote = {Claude Opus 4.5 is a large language model developed by Anthropic and released in 2025. In this project, Claude Opus 4.5 serves as the MCP client that interacts with the handwriting recognition computer vision systems. When given an image path and context about the handwriting style, Claude determines which MCP server tool is most appropriate based on the tool descriptions provided by each server. Claude sends tool calls in JSON format containing the tool name and image path parameter, receives the recognized text from the computer vision system, and presents the results to the user. This approach allows Claude to intelligently select between the EMNIST server for modern print handwriting and the CHoiCe server for cursive or historical handwriting styles based on user-provided context. Claude's ability to understand natural language descriptions of handwriting styles and map them to appropriate specialized tools demonstrates the practical application of MCP for integrating AI models with external computer vision systems.}
+}
+
+
+@article{CHoiCe Dataset,
+  author = "Hongming Zhang, Tom Gedeon, Sabrina Caldwell, Tom Gedeon & Josephine Plested",
+  year = 2021,
+  title = "A good CHoiCe: A Complex Handwritten Character dataset",
+  doi = {10.25911/602355a95f787},
+  url = {https://dx.doi.org/10.25911/602355a95f787}
+
 @article{10.1145/3687310,
   author     = {Ha, Soonhoi and Jeong, Eunjin},
   title      = {Software Optimization and Design Methodology for Low Power Computer Vision Systems},
