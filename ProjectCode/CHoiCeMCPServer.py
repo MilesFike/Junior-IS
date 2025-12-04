@@ -87,8 +87,7 @@ net.eval()  # Set to evaluation mode
 def preprocess_image(image_path_or_bytes):
     """
     Full image preprocessing pipeline for cursive handwritten character recognition.
-    It is for a single cursive handwritten character and processes based on CHoiCe dataset format.
-    This includes all the steps from CHoiCeImageProcessing.py to prepare a character for recognition from CHOICE.pth
+    EXACTLY matches CHoiCeImageProcessing.py process() function and CHoiCeComputerVision.py usage.
     Accepts either a local file path or HTTP/HTTPS URL
     """
     # Handle different input types
@@ -118,6 +117,7 @@ def preprocess_image(image_path_or_bytes):
     temp_output = os.path.join(temp_dir, "processed.png")
 
     try:
+        #===== EXACTLY MATCHING CHoiCeImageProcessing.py process() =====
         # Load image
         img = cv2.imread(imPathM)
         if img is None:
@@ -126,30 +126,36 @@ def preprocess_image(image_path_or_bytes):
         # Image is made grayscale
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-        # Threshold to just black text on white background
-        _, binary = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+        # Use Otsu's method for automatic threshold detection
+        # This handles images with varying brightness levels
+        _, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
         thresh = cv2.bitwise_not(binary)
 
         # This helpful function shrinks the image to just the borders of the black text
         x, y, w, h = cv2.boundingRect(thresh)
 
+        # Handle case where no content is found
+        if w == 0 or h == 0:
+            raise ValueError("No character content found in image")
+
         # Crop tight to character from the pure black/white image
         cropped = binary[y:y+h, x:x+w]
 
         # Convert to PIL for easier padding
-        pil_img = Image.fromarray(cropped)
+        # Ensure it's in 'L' mode (grayscale) to match training data (ChoiceDataset uses .convert('L'))
+        pil_img = Image.fromarray(cropped).convert('L')
         pil_img = ImageOps.pad(pil_img, (max(pil_img.size), max(pil_img.size)), color=255, centering=(0.5, 0.5))
 
         # Resizes to 28x28
         pil_img = pil_img.resize((28, 28), Image.BICUBIC)
 
-        # Save result
+        # Save result (grayscale 'L' mode, matching ChoiceDataset training format)
         pil_img.save(temp_output)
+        #===== END OF CHoiCeImageProcessing.py process() =====
 
-        # Convert to grayscale tensor
+        # Load and convert to tensor
+        # ChoiceDataset uses: image = Image.open(img_path).convert('L') then ToTensor()
         img = Image.open(temp_output).convert('L')
-
-        # Convert to tensor
         img_tensor = TF.to_tensor(img).unsqueeze(0)  #1, 1, 28, 28
         return img_tensor.to(device)
 
@@ -220,6 +226,7 @@ def segment_letters(original_img_path, processed_img_path):
     """
     Segment each individual letter from a line of cursive text
     Returns a list of cropped letter images as PIL Images
+    Uses the original image for cropping (matching lineToLetter.py behavior)
     """
     img = Image.open(processed_img_path)
     pixels = img.load()
@@ -244,6 +251,7 @@ def segment_letters(original_img_path, processed_img_path):
             current_range = []
 
     # Segments each of the individual letters from original image
+    # (matching lineToLetter.py which crops from original, then process() handles conversion)
     original = Image.open(original_img_path)
     letters = []
 
@@ -259,27 +267,22 @@ def segment_letters(original_img_path, processed_img_path):
 def predict_character(image_input):
     """
     Run inference on a single cursive character image
-    Excludes digits (0-9) since CHoiCe model was not trained on them
+    Matches the prediction logic from CHoiCeComputerVision.py
     """
 
     img_tensor = preprocess_image(image_input)
 
     with torch.no_grad():
         outputs = net(img_tensor)
-        probabilities = torch.softmax(outputs, dim=1)
-
-        # Mask out digit predictions (labels 0-9) since model wasn't trained on them
-        probabilities_copy = probabilities.clone()
-        probabilities_copy[0, 0:10] = 0  # Zero out digit probabilities
-
-        # Get prediction from non-digit classes only
-        _, predicted = torch.max(probabilities_copy, 1)
+        # Direct max on raw outputs (matching CHoiCeComputerVision.py)
+        _, predicted = torch.max(outputs, 1)
 
     predicted_label = predicted.item()
     predicted_char = label_to_char(predicted_label)
 
-    # Gets the confidence scores (from filtered probabilities)
-    confidence = probabilities_copy[0][predicted_label].item()
+    # Get confidence from softmax for reporting
+    probabilities = torch.softmax(outputs, dim=1)
+    confidence = probabilities[0][predicted_label].item()
 
     return {
         'character': predicted_char,
@@ -306,6 +309,7 @@ def recognize_cursive_line(image_path):
 
         for i, letter_img in enumerate(letters):
             # Saves each of the letters to temp file for processing
+            # (matching lineToLetter.py which just does crop.save() without conversion)
             letter_path = os.path.join(temp_dir, f"letter_{i}.png")
             letter_img.save(letter_path)
 

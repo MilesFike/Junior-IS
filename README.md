@@ -1,6 +1,4 @@
-# Your Project Title Here
-
-A brief description.
+MCP Implementation For Handwritten Text Recognition
 
 ## Feature Calendar
 
@@ -16,3 +14,5 @@ A brief description.
 | [A button should be able to be pressed to download a text file containing the extracted text.](https://github.com/MilesFike/Junior-IS/issues/8)                                                      | 10/31/25          |     |
 | [A text box displays which tool was used to extract the text.](https://github.com/MilesFike/Junior-IS/issues/9)                                                                                      | 11/1/25           |     |
 | [Stretch goal: Implement and compare diverse systems for different styles.](https://github.com/MilesFike/Junior-IS/issues/10)                                                                        | "if time permits" |     |
+
+
