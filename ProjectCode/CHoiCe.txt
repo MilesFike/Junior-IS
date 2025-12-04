@@ -1,0 +1,59 @@
+[Epoch 30, Batch 60] loss: 0.110
+[Epoch 30, Batch 70] loss: 0.099
+This model is trained images will be tested on now. This should be mostly effective.
+Model saved!
+Accuracy of the network on its test images: 0.61%
+Actual Label A
+Predicted Label A
+Actual Label 2
+Predicted Label 2
+[[178, 366], [398, 462], [484, 551], [574, 670], [676, 752], [901, 1033], [1051, 1080], [1100, 1241], [1269, 1340]]
+Predicted letter: I
+Predicted letter: 3
+Predicted letter: 3
+Predicted letter: D
+Predicted letter: I
+Predicted letter: Z
+Predicted letter: 3
+Predicted letter: 3
+Predicted letter: 6
+
+[Epoch 30, Batch 60] loss: 0.073
+[Epoch 30, Batch 70] loss: 0.072
+This model is trained images will be tested on now. This should be mostly effective.
+Model saved!
+Accuracy of the network on its test images: 0.65%
+Actual Label n
+Predicted Label V
+Actual Label F
+Predicted Label F
+[[178, 366], [398, 462], [484, 551], [574, 670], [676, 752], [901, 1033], [1051, 1080], [1100, 1241], [1269, 1340]]
+Predicted letter: P
+Predicted letter: I
+Predicted letter: i
+Predicted letter: 2
+Predicted letter: G
+Predicted letter: f
+Predicted letter: I
+Predicted letter: k
+Predicted letter: 8
+
+[Epoch 45, Batch 40] loss: 0.047
+[Epoch 45, Batch 50] loss: 0.041
+This model is trained images will be tested on now. This should be mostly effective.
+Model saved!
+Accuracy of the network on its test images: 0.60%
+Actual Label I
+Predicted Label I
+Actual Label D
+Predicted Label D
+[[178, 366], [398, 462], [484, 551], [574, 670], [676, 752], [901, 1033], [1051, 1080], [1100, 1241], [1269, 1340]]
+Predicted letter: G
+Predicted letter: I
+Predicted letter: i
+Predicted letter: Z
+Predicted letter: F
+Predicted letter: f
+Predicted letter: i
+Predicted letter: k
+Predicted letter: z

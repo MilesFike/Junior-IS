@@ -4,11 +4,15 @@ ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=ce
 #Code above ensures datasets are downloaded correctly
 
 from pathlib import Path
-BASE_DIR = Path(__file__).parent
+
+BASE_DIR = Path(__file__).parent# ProjectCode/
+PARENT_DIR = BASE_DIR.parent # Junior-IS/
+
 IMGS_DIR = BASE_DIR / "imgs"
 LETTERS_DIR = BASE_DIR / "letters"
 IMGS_DIR.mkdir(exist_ok=True)
 LETTERS_DIR.mkdir(exist_ok=True)
+
 
 import torch
 import torchvision
@@ -21,7 +25,7 @@ from ChoiceDataset import CHoiCeDataset
 import torchvision.transforms.functional as Tform
 import matplotlib.pyplot as plt
 from lineToLetter import run, segment_letters
-from imageProcessing import process
+from CHoiCeImageProcessing import process
 
 
 #What EMNIST DATA LOOKS LIKE according to https://www.tensorflow.org/datasets/catalog/emnist:
@@ -34,12 +38,13 @@ transform = torchvision.transforms.ToTensor()
 
 if __name__ == "__main__":
     def labelCheck(label):
+        # EMNIST label mapping: 0-9 (digits), 10-35 (A-Z), 36-61 (a-z)
         if(label < 10):
-            return label + 48
+            return label + 48  # 0-9 → ASCII 48-57
         elif(label < 36):
-            return label + 65
+            return (label - 10) + 65  # 10-35 → ASCII 65-90 (A-Z)
         else:
-            return label + 97
+            return (label - 36) + 97  # 36-61 → ASCII 97-122 (a-z)
 
 
 
@@ -50,15 +55,16 @@ if __name__ == "__main__":
         torchvision.transforms.ToTensor()
     ])
 
-    dataset = CHoiCeDataset(root_dir="./CHoiCe-Dataset/V0.3", transform=transform)
+   #CHoiCe-Dataset is in the ProjectCode directory
+    dataset = CHoiCeDataset(root_dir=str(BASE_DIR / "CHoiCe-Dataset" / "V0.3"), transform=transform, exclude_digits=True)
 
 # Splitting into train/test parts
     train_size = int(0.8 * len(dataset))
     test_size = len(dataset) - train_size
     train_dataset, test_dataset = torch.utils.data.random_split(dataset, [train_size, test_size])
 
-    trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=2)
-    testloader = torch.utils.data.DataLoader(test_dataset, batch_size=32, shuffle=False, num_workers=2)
+    trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=0)
+    testloader = torch.utils.data.DataLoader(test_dataset, batch_size=32, shuffle=False, num_workers=0)
 #print(chr(mapping[labels[0]]))
     #rotated = im.rotate(90)
     if(shower == "y"):
@@ -88,23 +94,14 @@ if __name__ == "__main__":
             alphabeta.append(chr(i))
         print(alphabeta)
 
-        numAB = []
-        for i in alphabeta:
-            numAB.append(ord(i)-48)
-        for i in range(65, 91):
-            numAB.append(ord(i)-65)
-        for i in range(97, 123):
-            numAB.append(ord(i)-97)
-        
-        print(numAB)
-
-
     compVision = input("Actual Computer Vision System(y/n):")
     if(compVision == "y"):
         criterion = nn.CrossEntropyLoss() #taken fom https://www.geeksforgeeks.org/deep-learning/computer-vision-with-pytorch/
-        optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9) #net from model short for network
+        optimizer = optim.SGD(net.parameters(), lr=0.01, momentum=0.9) #Increased from 0.001 to 0.01
 
-        for i in range(3): 
+        # Increased from 3 to 30 epochs for better training on small dataset
+        print("Training for 45 epochs")
+        for i in range(45): 
             device = torch.device("cpu")
             net.to(device)  #makes it run on cpu
             running_loss = 0
@@ -123,8 +120,8 @@ if __name__ == "__main__":
                 loss.backward()
                 optimizer.step()
                 running_loss += loss.item()
-                if j % 100 == 99:  # print every 100 mini-batches down scaling for efficiency, and because I want to see results.
-                    print(f'[{i + 1}, {j + 1}] loss: {running_loss / 100:.3f}')
+                if j % 10 == 9:  #prints every 10 mini-batches (dataset is extra small)
+                    print(f'[Epoch {i + 1}, Batch {j + 1}] loss: {running_loss / 10:.3f}')
                     running_loss = 0
 
         print('This model is trained images will be tested on now. This should be mostly effective.')
@@ -136,7 +133,6 @@ if __name__ == "__main__":
         with torch.no_grad():
             for data in testloader:
                 images, labels = data
-                labels = labels - 1
                 outputs = net(images)
                 _, predicted = torch.max(outputs, 1)
                 total += labels.size(0)
