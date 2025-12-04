@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+All files within C:/Users/Glast/Desktop/ are accessible to this when run
+This script is for general handwriting of any quality but not cursive or historic handwriting
+This script is not for the recognition of printed text
 MCP Server for Handwriting Recognition (EMNIST-based OCR)
 Exposes the trained CNN model as an MCP tool for character recognition
 This should be used in association with modern handwriting
@@ -66,11 +69,18 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 net = Net()
 
 #Loads the trained weights
+import os
+from pathlib import Path
+
+# Get the directory where this script is located
+SCRIPT_DIR = Path(__file__).parent
+MODEL_PATH = SCRIPT_DIR / 'EMNIST.pth'
+
 try:
-    net.load_state_dict(torch.load('EMNIST.pth', map_location=device))
-    print("Model taken from EMNIST.pth")
+    net.load_state_dict(torch.load(str(MODEL_PATH), map_location=device))
+    print(f"Model loaded from {MODEL_PATH}")
 except FileNotFoundError:
-    print("EMNIST.pth not found. It must be in the same directory.")
+    print(f"EMNIST.pth not found at {MODEL_PATH}. It must be in the same directory as MCPServer.py.")
 
 net.to(device)
 net.eval()  # Set to evaluation mode
@@ -294,7 +304,7 @@ def preprocess_image(image_path_or_bytes):
         img.save(temp_output)
         
         # Convert to tensor
-        img_tensor = TF.to_tensor(img).unsqueeze(0)  # [1, 1, 28, 28]
+        img_tensor = TF.to_tensor(img).unsqueeze(0)  #1, 1, 28, 28
         return img_tensor.to(device)
     
     finally:
@@ -373,7 +383,7 @@ def segment_letters(original_img_path, processed_img_path):
     current_range = []
     in_letter = False
     
-    #Locates the places where letters start
+    6#Locates the places where letters start
     for x in range(width):
         has_white = any(pixels[x, y] != (0, 0, 0) for y in range(height))
         
@@ -393,7 +403,7 @@ def segment_letters(original_img_path, processed_img_path):
     
     for begin, end in letter_ranges:
         if (end - begin) > 10:  
-            #This prevents little things like foxing and some punctuation from being counted as letters
+            #This prevents little things like foxing (not really a problem) and some punctuation from being counted as letters
             cropped = original.crop((begin, 0, end, height))
             letters.append(cropped)
     
@@ -401,7 +411,11 @@ def segment_letters(original_img_path, processed_img_path):
 
 
 def predict_character(image_input):
-    """Run inference on a single character image"""
+    """
+    Run inference on a single character image
+    Do this with each result of segment_letters
+    """
+
     img_tensor = preprocess_image(image_input)
     
     with torch.no_grad():
@@ -411,7 +425,7 @@ def predict_character(image_input):
     predicted_label = predicted.item()
     predicted_char = label_to_char(predicted_label)
     
-    #Gets confidence scores
+    #Gets the confidence scores
     probabilities = torch.softmax(outputs, dim=1)
     confidence = probabilities[0][predicted_label].item()
     

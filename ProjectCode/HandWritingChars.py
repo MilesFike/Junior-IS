@@ -33,7 +33,7 @@ from imageProcessing import process
 
 transform = torchvision.transforms.ToTensor()
 
-# Quick mode: train on smaller subset for faster testing (set to False for full training)
+# Quick mode: train on smaller subset for faster testing (set to False for full training this is very important. Quick mode is awesome for training though)
 QUICK_MODE = False
 
 if __name__ == "__main__":
