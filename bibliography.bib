@@ -33,12 +33,14 @@
 }
 
 
-@article{CHoiCe Dataset,
-  author = "Hongming Zhang, Tom Gedeon, Sabrina Caldwell, Tom Gedeon & Josephine Plested",
-  year = 2021,
-  title = "A good CHoiCe: A Complex Handwritten Character dataset",
+@misc{CHoiCeDataset,
+  author = {Zhang, Hongming and Gedeon, Tom and Caldwell, Sabrina and Plested, Josephine},
+  year = {2021},
+  title = {A good CHoiCe: A Complex Handwritten Character dataset},
   doi = {10.25911/602355a95f787},
-  url = {https://dx.doi.org/10.25911/602355a95f787}
+  url = {https://dx.doi.org/10.25911/602355a95f787},
+  annote = {The CHoiCe (Complex Handwritten Character) dataset was created by researchers at the Australian National University to address limitations in existing handwriting datasets like MNIST and EMNIST. The dataset contains 62 classes of cursive handwriting characters (0-9, a-z, A-Z) with at least 40 images per class in 28 by 28 pixel PNG format. The data was collected from Professor Tom Gedeon's handwriting and the CEDAR handwriting dataset. Unlike standard datasets where characters are written in isolation, CHoiCe includes characters extracted from continuous cursive text, capturing the stylistic differences that occur when letters are written as part of words rather than individually. This makes the dataset valuable for training models to recognize cursive and informal handwriting styles that differ significantly from the standardized characters in EMNIST.}
+}
 
 @article{10.1145/3687310,
   author     = {Ha, Soonhoi and Jeong, Eunjin},
@@ -140,7 +142,8 @@
   title    = {What is the Model Context Protocol (MCP)?},
   url      = {https://modelcontextprotocol.io/docs/getting-started/intro},
   year     = {2025},
-  keywords = {Model Context Protocol, MCP, AI model}
+  keywords = {Model Context Protocol, MCP, AI model},
+  annote = {This article introduces the Model Context Protocol (MCP), a standard for integrating AI models with external tools and systems. MCP enables AI models to utilize external tools allowing them to extend their capabilities beyond normal capabilities. JSON works as a standardized response format for returning results. MCP supports various types of tools, including web services, databases, and local applications. By using MCP, AI models can leverage specialized tools for tasks such as data retrieval, computation, and interaction with other projects' systems. This enhances the capabilities and functionality of AI models in diverse applications. This article is relevant to the project as it provides the foundational understanding of MCP, which is used to connect the AI model (Claude Opus 4.5) with the handwriting recognition computer vision systems (EMNIST and CHoiCe). Understanding MCP is crucial for implementing the integration between the AI model and the external computer vision tools effectively. The source provided extensive code examples that I reference.}
 }
 
 @inproceedings{7966217,
